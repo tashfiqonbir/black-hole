@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Realistic Black Hole - by Onbir</title>
+<style>
+    * { margin: 0; padding: 0; overflow: hidden; }
+  body {
+    background: radial-gradient(ellipse at center, #000010 0%, #000 100%);
+    font-family: 'Arial', sans-serif;
+  }
+  canvas { display: block; }
+  
+  /* Social Links */
+  .social {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    color: #aaa;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  .social a {
+    color: #00aaff;
+    text-decoration: none;
+    margin: 0 15px;
+    transition: 0.3s;
+  }
+  .social a:hover {
+    color: #fff;
+    text-shadow: 0 0 10px #00aaff;
+  }
+  .title {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    text-shadow: 0 0 10px #00aaff;
+  }
+</style>
+</head>
+<body>
+<div class="title">Realistic Black Hole Simulation</div>
+<canvas id="canvas"></canvas>
+
+<div class="social">
+  Made by Onbir | 
+  <a href="https://facebook.com/onbir.official" target="_blank">Facebook</a>
+  <a href="https://instagram.com/tashfiqonbir" target="_blank">Instagram</a>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+
+const centerX = w / 2;
+const centerY = h / 2;
+
+// Stars
+const stars = [];
+for(let i=0; i<400; i++){
+  stars.push({
+    x: Math.random()*w,
+    y: Math.random()*h,
+    r: Math.random()*1.5,
+    alpha: Math.random()
+  });
+}
+
+// Planets
+const planets = [
+  {r: 200, angle: 0, speed: 0.002, size: 8, color: '#4da6ff'},
+  {r: 280, angle: 2, speed: 0.0012, size: 12, color: '#ffaa00'}
+];
+
+let time = 0;
+
+function drawBlackHole() {
+  // Gravitational lensing effect - multiple rings
+  for(let i=0; i<8; i++){
+    let radius = 60 + i*15;
+    let alpha = 1 - i*0.12;
+    let gradient = ctx.createRadialGradient(centerX, centerY, radius-10, centerX, centerY, radius+20);
+    gradient.addColorStop(0, `rgba(255,200,100,${alpha*0.3})`);
+    gradient.addColorStop(0.5, `rgba(255,150,50,${alpha*0.2})`);
+    gradient.addColorStop(1, `rgba(0,0,0,0)`);
+    
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI*2);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+  }
+
+  // Accretion disk
+  ctx.save();
+  ctx.translate(centerX, centerY);
+  ctx.rotate(time * 0.001);
+  for(let i=0; i<3; i++){
+    let diskGrad = ctx.createRadialGradient(0,0,50+i*20, 0,0, 180+i*30);
+    diskGrad.addColorStop(0, 'rgba(255,180,0,0)');
+    diskGrad.addColorStop(0.4, 'rgba(255,120,0,0.4)');
+    diskGrad.addColorStop(0.7, 'rgba(255,50,0,0.3)');
+    diskGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = diskGrad;
+    ctx.beginPath();
+    ctx.ellipse(0,0, 200+i*30, 60+i*10, 0, 0, Math.PI*2);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // Black hole core - event horizon
+  let coreGrad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 50);
+  coreGrad.addColorStop(0, '#000');
+  coreGrad.addColorStop(0.8, '#000');
+  coreGrad.addColorStop(1, 'rgba(255,100,0,0.5)');
+  ctx.fillStyle = coreGrad;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 50, 0, Math.PI*2);
+  ctx.fill();
+}
+
+function drawPlanets(){
+  planets.forEach(p => {
+    p.angle += p.speed;
+    let x = centerX + Math.cos(p.angle) * p.r;
+    let y = centerY + Math.sin(p.angle) * p.r * 0.3; // elliptical orbit
+    
+    // Planet glow
+    let glow = ctx.createRadialGradient(x, y, 0, x, y, p.size*3);
+    glow.addColorStop(0, p.color);
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(x, y, p.size*3, 0, Math.PI*2);
+    ctx.fill();
+    
+    // Planet
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(x, y, p.size, 0, Math.PI*2);
+    ctx.fill();
+  });
+}
+
+function drawStars(){
+  stars.forEach(s => {
+    s.alpha += (Math.random()-0.5)*0.02;
+    s.alpha = Math.max(0.1, Math.min(1, s.alpha));
+    ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fill();
+  });
+}
+
+function animate(){
+  ctx.clearRect(0,0,w,h);
+  drawStars();
+  drawBlackHole();
+  drawPlanets();
+  time++;
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener('resize', ()=>{
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

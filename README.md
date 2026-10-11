@@ -17,7 +17,12 @@ Live Demo: `https://tashfiqonbir.github.io/black-hole/`
 - **Responsive** - Sob screen size e auto adjust hobe
 - **Social Links** - Facebook + Instagram included
 
-## 🚀 How to Use
+##🚀 How to use online 
+```bash
+pkg update -y && pkg install xdg-utils -y
+xdg-open https://tashfiqonbir.github.io/black-hole/
+```
+## 🚀 How to Use offline via html file
 ```bash
 pkg install git -y
 git clone https://github.com/tashfiqonbir/black-hole.git

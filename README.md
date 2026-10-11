@@ -1,49 +1,31 @@
 # black-hole
 
-# 🌌 Realistic Black Hole Simulation
+# GARGANTUA 360° 🌌
 
-A fully interactive, realistic black hole simulation built with pure HTML5 Canvas and JavaScript. Designed to run directly on GitHub Pages with zero dependencies.
+Interstellar movie er Gargantua black hole er realistic 360° rotating simulation. 
+Pure HTML + Canvas diye banano. Kono library lagbe na.
 
-![Black Hole Preview](https://img.shields.io/badge/Status-Live-brightgreen)
-![Tech](https://img.shields.io/badge/Tech-HTML%20%7C%20CSS%20%7C%20JS-blue)
+Live Demo: `https://tashfiqonbir.github.io/black-hole/`
 
 ## ✨ Features
 
-- **Realistic Black Hole Physics** 
-    - Event Horizon with gravitational lensing effect
-    - Rotating Accretion Disk with multi-layer glow
-    - Deep space background with 400+ twinkling stars
+- **360° Rotating Accretion Disk** - Slow cinematic rotation
+- **Realistic Glow** - Orange-golden disk with photon ring
+- **3 Orbiting Planets** - Disk er upor diye orbit kore
+- **2000+ Stars Background** - Depth effect soho
+- **Mobile Friendly** - WebGL nai tai sob phone e cholbe
+- **Responsive** - Sob screen size e auto adjust hobe
+- **Social Links** - Facebook + Instagram included
 
-- **Orbital System**
-    - 2 orbiting planets with elliptical paths
-    - Dynamic glow and shadow effects
-    - Smooth 60fps animation
-
-- **Fully Responsive**
-    - Works on Desktop, Tablet & Mobile
-    - Auto-resize canvas on window resize
-    - Lightweight, no external libraries
-
-- **Custom Branding**
-    - Footer with social links
-    - Clean minimal UI
-
-## 🚀 Live Demo
-
-**[View Live Demo](https://tashfiqonbir.github.io/black-hole/)** 
-*Replace with your GitHub Pages link*
-
-## 🛠️ Tech Stack
-
-- **HTML5** - Canvas rendering
-- **CSS3** - Styling and layout  
-- **Vanilla JavaScript** - Animation and physics logic
-- **No Dependencies** - Runs 100% in browser
-
-## 📦 Installation & Deployment
-
-### Run Locally
+## 🚀 How to Use
 ```bash
-git clone https://github.com/your-username/black-hole.git
+pkg install git -y
+git clone https://github.com/tashfiqonbir/black-hole.git
 cd black-hole
-open index.html
+termux-open index.html
+```
+## ⚙️ Customize
+
+Speed barate/komate chaile `script` er moddhe ei line ta change koro:
+```js
+angle += 0.002; // barale fast, komale slow

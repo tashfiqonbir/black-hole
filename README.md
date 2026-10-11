@@ -30,7 +30,7 @@ A fully interactive, realistic black hole simulation built with pure HTML5 Canva
 
 ## 🚀 Live Demo
 
-**[View Live Demo](https://your-username.github.io/black-hole/)** 
+**[View Live Demo](https://tashfiqonbir.github.io/black-hole/)** 
 *Replace with your GitHub Pages link*
 
 ## 🛠️ Tech Stack

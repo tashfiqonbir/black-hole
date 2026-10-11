@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Gargantua - by Onbir</title>
+<style>
+    * { margin: 0; padding: 0; overflow: hidden; background: #000; }
+  canvas { display: block; }
+  .title { position: absolute; top: 20px; width: 100%; text-align: center; color: #ddd; font-size: 18px; letter-spacing: 3px; opacity: 0.6; }
+  .social { position: absolute; bottom: 20px; width: 100%; text-align: center; color: #666; font-size: 13px; }
+  .social a { color: #00aaff; text-decoration: none; margin: 0 15px; }
+</style>
+<script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div class="title">GARGANTUA FINAL</div>
+<canvas id="c"></canvas>
+<div class="social">
+  Made by Onbir | 
+  <a href="https://facebook.com/onbir.official" target="_blank">Facebook</a>
+  <a href="https://instagram.com/tashfiqonbir" target="_blank">Instagram</a>
+</div>
+<script type="module">
+import * as THREE from 'three';
+
+// Scene Setup
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias: true});
+renderer.setSize(innerWidth, innerHeight);
+
+camera.position.z = 400;
+
+// 2000 Stars
+const starGeo = new THREE.BufferGeometry();
+const starPos = [];
+for(let i=0; i<2000; i++){
+  starPos.push((Math.random()-0.5)*2000, (Math.random()-0.5)*2000, (Math.random()-0.5)*2000);
+}
+starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
+scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xffffff, size:1})));
+
+// Black Hole
+const bhGeo = new THREE.SphereGeometry(60, 64, 64);
+const bhMat = new THREE.MeshBasicMaterial({color:0x000});
+const blackHole = new THREE.Mesh(bhGeo, bhMat);
+scene.add(blackHole);
+
+// Accretion Disk
+const diskGeo = new THREE.RingGeometry(65, 200, 64);
+const diskMat = new THREE.MeshBasicMaterial({color:0xffaa00, side:THREE.DoubleSide, transparent:true, opacity:0.8});
+const disk = new THREE.Mesh(diskGeo, diskMat);
+disk.rotation.x = Math.PI/2;
+scene.add(disk);
+
+// Photon Ring
+const ringGeo = new THREE.TorusGeometry(62, 2, 16, 100);
+const ringMat = new THREE.MeshBasicMaterial({color:0xffffaa});
+const ring = new THREE.Mesh(ringGeo, ringMat);
+ring.rotation.x = Math.PI/2;
+scene.add(ring);
+
+// 3 Planets
+const planets = [];
+[180, 250, 320].forEach((r,i)=>{
+  const p = new THREE.Mesh(new THREE.SphereGeometry(5+i, 16, 16), new THREE.MeshBasicMaterial({color:0x44aaff}));
+  p.userData = {r, angle: i*2, speed: 0.002/(i+1)};
+  planets.push(p); scene.add(p);
+});
+
+// Animate
+function animate(){
+  requestAnimationFrame(animate);
+  
+  disk.rotation.z += 0.001;
+  ring.rotation.z += 0.001;
+  
+  planets.forEach(p=>{
+    p.userData.angle += p.userData.speed;
+    p.position.x = Math.cos(p.userData.angle) * p.userData.r;
+    p.position.z = Math.sin(p.userData.angle) * p.userData.r * 0.3;
+  });
+  
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', ()=>{
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>

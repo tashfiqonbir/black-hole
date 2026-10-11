@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gargantua 360° - by Onbir</title>
+<style>
+    * { margin: 0; padding: 0; overflow: hidden; background: #000; }
+  canvas { display: block; }
+  .title { position: absolute; top: 3vh; width: 100%; text-align: center; color: #ffcc88; font-size: 22px; letter-spacing: 6px; text-shadow: 0 0 25px #ff8800; font-family: Arial; opacity: 0.8; }
+  .social { position: absolute; bottom: 3vh; width: 100%; text-align: center; color: #444; font-size: 14px; font-family: Arial; }
+  .social a { color: #00aaff; text-decoration: none; margin: 0 20px; transition: 0.3s; }
+  .social a:hover { color: #fff; text-shadow: 0 0 10px #00aaff; }
+</style>
+</head>
+<body>
+<div class="title">GARGANTUA</div>
+<canvas id="c"></canvas>
+<div class="social">
+  Made by Onbir | 
+  <a href="https://facebook.com/onbir.official" target="_blank">Facebook</a>
+  <a href="https://instagram.com/tashfiqonbir" target="_blank">Instagram</a>
+</div>
+<script>
+const c = document.getElementById('c'), ctx = c.getContext('2d');
+let W = innerWidth, H = innerHeight;
+c.width = W; c.height = H;
+const cx = W/2, cy = H/2;
+let angle = 0;
+
+// 2000 stars with depth
+const stars = Array.from({length:2000}, () => ({
+  x: Math.random()*W, y: Math.random()*H, 
+  r: Math.random()*1.5, depth: Math.random()
+}));
+
+// 3 planets - tomr pic er moto
+const planets = [
+  {dist: 0.75, size: 6, speed: 0.003, color: '#ffddaa'},
+  {dist: 0.85, size: 8, speed: 0.002, color: '#aaddff'},
+  {dist: 0.95, size: 7, speed: 0.0015, color: '#ffaa88'}
+];
+
+function draw() {
+  ctx.fillStyle = 'rgba(0,0,0,0.05)';
+  ctx.fillRect(0,0,W,H);
+
+  // Stars
+  stars.forEach(s => {
+    ctx.fillStyle = `rgba(255,255,255,${0.3 + s.depth*0.7})`;
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+  });
+
+  ctx.save();
+  ctx.translate(cx,cy);
+  ctx.rotate(angle);
+
+  // Accretion Disk - 360° view, tomr pic er moto glow
+  for(let r = 120; r < 280; r += 8){
+    let gradient = ctx.createRadialGradient(0,0,r, 0,0,r+20);
+    let glow = 0.8 - r/350;
+    gradient.addColorStop(0, `rgba(255,${180+r/2},50,${glow})`);
+    gradient.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = 20;
+    ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.stroke();
+  }
+
+  // Planets on disk
+  planets.forEach((p,i)=>{
+    let a = angle * (i+1) * 0.5;
+    let r = 200 * p.dist;
+    let x = Math.cos(a) * r;
+    let y = Math.sin(a) * r * 0.15; // tilt effect
+    
+    // glow
+    let g = ctx.createRadialGradient(x,y,0, x,y,p.size*3);
+    g.addColorStop(0,p.color); g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(x,y,p.size*3,0,Math.PI*2); ctx.fill();
+    
+    // planet
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(x,y,p.size,0,Math.PI*2); ctx.fill();
+  });
+
+  ctx.restore();
+
+  // Black Hole Shadow - center
+  let shadow = ctx.createRadialGradient(cx,cy,0, cx,cy,110);
+  shadow.addColorStop(0,'#000');
+  shadow.addColorStop(0.9,'#000');
+  shadow.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle = shadow;
+  ctx.beginPath(); ctx.arc(cx,cy,115,0,Math.PI*2); ctx.fill();
+
+  // Photon Ring
+  let ring = ctx.createRadialGradient(cx,cy,112, cx,cy,120);
+  ring.addColorStop(0,'rgba(255,240,200,0)');
+  ring.addColorStop(0.5,'rgba(255,240,200,0.9)');
+  ring.addColorStop(1,'rgba(255,240,200,0)');
+  ctx.fillStyle = ring;
+  ctx.beginPath(); ctx.arc(cx,cy,116,0,Math.PI*2); ctx.fill();
+
+  angle += 0.002; // 360° rotation speed. barale fast hobe
+  requestAnimationFrame(draw);
+}
+draw();
+
+window.addEventListener('resize', ()=>{
+  W = innerWidth; H = innerHeight;
+  c.width = W; c.height = H;
+});
+</script>
+</body>
+</html>
